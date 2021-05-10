@@ -1,6 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Button from '../../components/button';
 import withModalProvider from '../withModalProvider';
@@ -63,7 +67,12 @@ const DynamicSnapPointExample = () => {
     <View style={styles.container}>
       <Button label="Present" onPress={handlePresentPress} />
       <Button label="Dismiss" onPress={handleDismissPress} />
-      <BottomSheetModal ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
+      <BottomSheetModal
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={BottomSheetBackdrop}
+      >
         <BottomSheetView
           style={contentContainerStyle}
           onLayout={handleOnLayout}
