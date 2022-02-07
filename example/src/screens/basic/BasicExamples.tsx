@@ -23,6 +23,12 @@ const createExampleScreen = ({ type, count = 25 }: ExampleScreenProps) =>
     const bottomSheetRef = useRef<BottomSheet>(null);
     //#endregion
 
+    const [mounted, setMounted] = useState(true);
+
+    const handleMount = useCallback(() => {
+      setMounted(s => !s);
+    }, []);
+
     //#region variables
     const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
     const enableContentPanningGestureButtonText = useMemo(
@@ -82,6 +88,7 @@ const createExampleScreen = ({ type, count = 25 }: ExampleScreenProps) =>
 
     return (
       <View style={styles.container}>
+        <Button label={mounted ? 'unmount' : 'mount'} onPress={handleMount} />
         <Button label="Snap To 90%" onPress={() => handleSnapPress(2)} />
         <Button label="Snap To 50%" onPress={() => handleSnapPress(1)} />
         <Button label="Snap To 25%" onPress={() => handleSnapPress(0)} />
@@ -96,19 +103,21 @@ const createExampleScreen = ({ type, count = 25 }: ExampleScreenProps) =>
           label={enableHandlePanningGestureButtonText}
           onPress={handleEnableHandlePanningGesturePress}
         />
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={1}
-          snapPoints={snapPoints}
-          animationConfigs={animationConfigs}
-          animateOnMount={true}
-          enableContentPanningGesture={enableContentPanningGesture}
-          enableHandlePanningGesture={enableHandlePanningGesture}
-          onChange={handleSheetChange}
-          onAnimate={handleSheetAnimate}
-        >
-          <ContactList key={`${type}.list`} type={type} count={count} />
-        </BottomSheet>
+        {mounted && (
+          <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            animationConfigs={animationConfigs}
+            animateOnMount={false}
+            enableContentPanningGesture={enableContentPanningGesture}
+            enableHandlePanningGesture={enableHandlePanningGesture}
+            onChange={handleSheetChange}
+            onAnimate={handleSheetAnimate}
+          >
+            <ContactList key={`${type}.list`} type={type} count={count} />
+          </BottomSheet>
+        )}
       </View>
     );
   });
