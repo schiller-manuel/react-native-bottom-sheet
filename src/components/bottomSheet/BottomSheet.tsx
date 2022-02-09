@@ -206,6 +206,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
     const animatedCurrentIndex = useReactiveSharedValue(
       animateOnMount ? -1 : _providedIndex
     );
+    const animatedStartPosition = useSharedValue(INITIAL_POSITION);
     const animatedPosition = useSharedValue(INITIAL_POSITION);
     const animatedNextPosition = useSharedValue(0);
     const animatedNextPositionIndex = useSharedValue(0);
@@ -499,6 +500,8 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedAnimationSource.value === ANIMATION_SOURCE.SNAP_POINT_CHANGE &&
         animatedAnimationState.value === ANIMATION_STATE.RUNNING
       ) {
+        //console.log('#### yes, we are here', animatedCurrentIndex.value, animatedNextPositionIndex.value)
+        // TODO: expose animatedNextPosition using bottomSheetInternal
         return animatedNextPositionIndex.value;
       }
 
@@ -642,6 +645,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
 
         animatedAnimationSource.value = ANIMATION_SOURCE.NONE;
         animatedAnimationState.value = ANIMATION_STATE.STOPPED;
+        animatedStartPosition.value = animatedPosition.value;
         animatedNextPosition.value = Number.NEGATIVE_INFINITY;
         animatedNextPositionIndex.value = Number.NEGATIVE_INFINITY;
       }
@@ -686,6 +690,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
         animatedNextPosition.value = position;
         animatedNextPositionIndex.value =
           animatedSnapPoints.value.indexOf(position);
+
+        /**
+         * store start position
+         */
+        animatedStartPosition.value = animatedPosition.value;
 
         /**
          * fire `onAnimate` callback
